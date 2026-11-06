@@ -168,3 +168,24 @@ footer img{margin:0 auto .5rem}
 .status.quiet{background:transparent;color:var(--rust);border:1.5px solid var(--rust)}
 .gait{width:min(100%,900px);margin:0 auto 1.75rem}
 .credit{font-size:.8rem;color:var(--muted)}
+
+/* 13:14, Angel: a hero slider of photographs instead of the skeleton strip */
+.hero-slider{position:relative;max-width:none;padding:0;margin:0;height:min(78vh,720px);min-height:460px;overflow:hidden;color:#fff;background:var(--teal)}
+.hero-slider .slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.4s ease;border-radius:0}
+.hero-slider .slides img.is-on{opacity:1}
+.hero-slider::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(22,38,43,.15) 0%,rgba(22,38,43,.25) 40%,rgba(22,38,43,.78) 100%);pointer-events:none}
+.hero-copy{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:0 var(--gutter) 3.25rem;max-width:var(--max);margin:0 auto;text-align:center}
+.hero-copy .eyebrow{color:#e7f1f2;margin-bottom:.4rem}
+.hero-copy h1{color:#fff;font-size:clamp(2.6rem,10vw,5.2rem);margin:0 0 .25rem;text-shadow:0 2px 18px rgba(0,0,0,.35)}
+.hero-copy .triad{color:#cfe6ea;margin-bottom:1.25rem}
+.hero-actions{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin:0}
+.btn.light{background:rgba(255,255,255,.92);color:var(--teal)}
+.btn.light:hover{background:#fff}
+.dots{position:absolute;z-index:3;left:0;right:0;bottom:1rem;display:flex;justify-content:center;gap:.5rem}
+.dots button{width:10px;height:10px;border-radius:50%;border:1.5px solid #fff;background:transparent;padding:0;cursor:pointer}
+.dots button[aria-current="true"]{background:#fff}
+@media (prefers-reduced-motion: reduce){.hero-slider .slides img{transition:none}}
+.intro{text-align:center;padding-top:2.5rem}
+.intro .logo{width:min(180px,45vw);margin:0 auto 1.25rem}
+.intro .lede{text-align:left;max-width:40em;margin:0 auto 1.25rem}
+.credit a{color:inherit}

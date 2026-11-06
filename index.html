@@ -24,12 +24,32 @@
 </header>
 <main>
 
-<section class="hero">
+<section class="hero-slider" aria-label="Equine Biomechanics">
+  <div class="slides">
+    <img class="slide is-on" src="assets/hero-walk-1100.webp" srcset="assets/hero-walk-1100.webp 1100w, assets/hero-walk.webp 2200w" sizes="100vw" alt="A white horse walking along a ridge, mountains and sky behind" style="object-position:62% 55%">
+    <img class="slide" src="assets/hero-camargue-1100.webp" srcset="assets/hero-camargue-1100.webp 1100w, assets/hero-camargue.webp 2200w" sizes="100vw" alt="Camargue horses standing in still water under a blue sky, their reflections below" style="object-position:50% 60%" loading="lazy">
+    <img class="slide" src="assets/hero-sunrise-1100.webp" srcset="assets/hero-sunrise-1100.webp 1100w, assets/hero-sunrise.webp 2200w" sizes="100vw" alt="Two ponies walking through morning mist at sunrise" style="object-position:35% 70%" loading="lazy">
+  </div>
+  <div class="hero-copy">
+    <p class="eyebrow">A three-part educational series for horse owners &amp; riders</p>
+    <h1>Equine Biomechanics</h1>
+    <p class="triad"><span>Structure</span><i>•</i><span>Posture</span><i>•</i><span>Function</span></p>
+    <p class="hero-actions"><a class="btn" href="register.html?class=part-1">Register for Saturday</a><a class="btn light" href="classes.html">See the classes</a></p>
+  </div>
+  <div class="dots" role="group" aria-label="Photos"><button type="button" aria-label="Show photo 1" aria-current="true"></button><button type="button" aria-label="Show photo 2"></button><button type="button" aria-label="Show photo 3"></button></div>
+</section>
+<script>
+(function(){
+  var s=[].slice.call(document.querySelectorAll(".hero-slider .slide")), d=[].slice.call(document.querySelectorAll(".hero-slider .dots button")), i=0, t;
+  function go(n){ s[i].classList.remove("is-on"); d[i].removeAttribute("aria-current"); i=(n+s.length)%s.length; s[i].classList.add("is-on"); d[i].setAttribute("aria-current","true"); }
+  function play(){ if(matchMedia("(prefers-reduced-motion: reduce)").matches) return; clearInterval(t); t=setInterval(function(){go(i+1)},6000); }
+  d.forEach(function(b,n){ b.addEventListener("click",function(){ go(n); play(); }); });
+  play();
+})();
+</script>
+
+<section class="intro">
   <img class="logo" src="assets/logo.svg" alt="Dynamic Horse Solutions" width="240" height="240">
-  <p class="eyebrow">A three-part educational series for horse owners &amp; riders</p>
-  <h1>Equine Biomechanics</h1>
-  <p class="triad"><span>Structure</span><i>•</i><span>Posture</span><i>•</i><span>Function</span></p>
-  <img class="gait" src="assets/skeletons-in-motion.webp" alt="A horse skeleton in four moments of motion, from a trot into a run" width="2981" height="436">
   <p class="lede">Explore the relationship between structure, posture and function through lecture, demonstration and guided exploration of a real equine skeleton. Learn to recognize healthy weight-bearing posture, identify postural imbalances, and better tell patterns of posture and restriction apart from those that may point to true discomfort.</p>
   <ul class="format"><li>Lecture</li><li>Demonstration</li><li>Guided skeleton exploration</li><li>Workbook included</li></ul>
 </section>
@@ -94,7 +114,7 @@
   <img src="assets/logo.svg" alt="Dynamic Horse Solutions" width="140" height="140">
   <p><a href="classes.html">Classes</a> · <a href="register.html">Register</a> · <a href="https://link.aztechsol.com/bewell-release">Media release</a> · <a href="contact.html">Contact</a></p>
   <p>© 2026 Dynamic Horse Solutions · Tucson, Arizona</p>
-  <p class="credit">Skeletons in motion: Eadweard Muybridge, 1881, Library of Congress (public domain).</p>
+  <p class="credit">Photos: <a href="https://commons.wikimedia.org/wiki/File:Domestic_horse_at_Suryachaur_and_the_mountains_in_the_back1.jpg">Shadow Ayush</a> · <a href="https://commons.wikimedia.org/wiki/File:Saint-Laurent-d%27Aigouze_-_Camargue_horses_-_04.jpg">Benjamin Smith</a> · <a href="https://commons.wikimedia.org/wiki/File:NewForestPonies_sunrise.jpg">Joana Kruse</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, via Wikimedia Commons.</p>
 </footer>
 </body>
 </html>
