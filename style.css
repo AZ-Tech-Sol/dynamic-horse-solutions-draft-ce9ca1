@@ -216,3 +216,9 @@ footer img{margin:0 auto .5rem}
 .deposit{background:#fff;border:1px solid var(--line);border-left:4px solid var(--green);border-radius:var(--radius);padding:.9rem 1.1rem;margin-bottom:1rem}
 .deposit p{margin:.2rem 0}
 .form-wrap h2{text-align:left}
+
+/* 13:42, Angel: one photo only, the two ponies at sunrise; the words sit in the sky, clear of the ponies */
+.hero-slider.single::after{background:linear-gradient(180deg,rgba(22,38,43,.72) 0%,rgba(22,38,43,.35) 45%,rgba(22,38,43,0) 70%,rgba(22,38,43,.15) 100%)}
+.hero-slider.single .hero-copy{top:0;bottom:auto;padding-top:2.5rem;padding-bottom:0}
+@media (min-width:900px){.hero-slider.single .hero-copy{padding-top:4rem}}
+@media (min-width:900px){.hero-slider.single .slides img{object-position:40% 40% !important}}
