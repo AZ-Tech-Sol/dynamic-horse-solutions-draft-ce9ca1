@@ -2,7 +2,7 @@
   /* Dynamic Horse Solutions brand guidelines — Open Sky (picked 2026-11-06 12:37) */
   --paper:#e7f1f2; --paper-2:#ffffff; --ink:#16262b; --muted:#3f5a61;
   --teal:#243e46; --rust:#4a6c8c; --sage:#ffffff; --brown:#243e46; --terra:#5c9ca8; --on-aqua:#16262b; --green:#7faf8f;
-  --line:#c3d6d9; --radius:14px;
+  --line:#c3d6d9; --radius:14px; --btn:#367884; --btn-hover:#243e46; --btn-radius:10px;
   --serif:"Jost",Arial,sans-serif; --display:"Cormorant Garamond",Georgia,serif; --sans:"Jost",Arial,sans-serif;
   --gutter:16px; --max:1040px;
 }
@@ -159,3 +159,12 @@ footer img{margin:0 auto .5rem}
 .later,.extra,.card{background:#fff;border:1px solid var(--line)}
 .band .num{color:var(--green)}
 .top nav a[aria-current="page"]{color:var(--teal);border-bottom-color:var(--green)}
+
+/* 13:05, Angel: light letters on the buttons, and a little rounder */
+.btn,.status,.top nav a.release{background:var(--btn);color:#fff;border-radius:var(--btn-radius)}
+.btn:hover,.top nav a.release:hover{background:var(--btn-hover)}
+.btn.ghost{background:transparent;color:var(--teal);border:1.5px solid var(--teal);border-radius:var(--btn-radius)}
+.btn.ghost:hover{background:var(--teal);color:#fff}
+.status.quiet{background:transparent;color:var(--rust);border:1.5px solid var(--rust)}
+.gait{width:min(100%,900px);margin:0 auto 1.75rem}
+.credit{font-size:.8rem;color:var(--muted)}
