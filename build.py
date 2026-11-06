@@ -58,6 +58,8 @@ CLASSES_DATA = [
          img="class-3-poll-tmj", when="April 2027", time="date to be announced", status="open",
          blurb="The poll and the temporomandibular joint, where the head meets the spine, and how the jaw and upper neck shape the whole horse's way of going."),
 ]
+TURNSTILE_SITEKEY = "0x4AAAAAAF2xBfE9am2PxE1r"   # Angel's widget, 2026-11-06 14:14; the secret lives only in n8n (credential 4fN01sgazguMbgJ3)
+TURNSTILE_JS = '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>'
 PRICE_TOTAL, PRICE_DEPOSIT = 220, 110   # Angel 2026-11-06 13:37: an unscheduled class is $220, and $110 holds the place (50%)
 WHERE = "Copper Horse Ranch · 9887 N Camino de Oeste · Tucson, AZ"
 INCL = "Lecture · demonstration · guided skeleton exploration · workbook included"
@@ -103,10 +105,12 @@ def reg_form(c):
       <label class="inline"><input type="radio" name="payment" value="PayPal"> PayPal</label>
     </fieldset>
     <label>Anything Jo Ann should know <span class="opt">(optional)</span> <textarea name="notes" rows="3"></textarea></label>
+    <div class="cf-turnstile" data-sitekey="{TURNSTILE_SITEKEY}" data-action="register" data-theme="light"></div>
     <button class="btn" type="submit">Hold my place</button>
     <p id="msg" class="msg" role="status" aria-live="polite"></p>
   </form>
 </section>
+{TURNSTILE_JS}
 <script>
 (function(){{
   var f=document.getElementById("reg"), msg=document.getElementById("msg");
@@ -117,10 +121,15 @@ def reg_form(c):
   f.addEventListener("submit",function(e){{
     e.preventDefault();
     if(!f.checkValidity()){{ f.reportValidity(); return; }}
-    var d=Object.fromEntries(new FormData(f).entries()); d.deposit={PRICE_DEPOSIT}; d.total={PRICE_TOTAL}; d.submitted_at=new Date().toISOString(); d.page=location.href;
+    var d=Object.fromEntries(new FormData(f).entries()); d.turnstile_token=d["cf-turnstile-response"]||""; delete d["cf-turnstile-response"];
+    if(!d.turnstile_token){{ msg.textContent="One moment: the security check is still loading. Please try again in a few seconds."; return; }}
+    d.deposit={PRICE_DEPOSIT}; d.total={PRICE_TOTAL}; d.submitted_at=new Date().toISOString(); d.page=location.href;
     var btn=f.querySelector("button"); btn.disabled=true; msg.textContent="Sending…";
     fetch("{WEBHOOK}",{{method:"POST",headers:{{"Content-Type":"application/json"}},body:JSON.stringify(d)}})
-      .then(function(r){{ if(!r.ok) throw new Error(r.status); f.reset(); var t="Hi Jo Ann, this is "+d.full_name+". I just registered for "+d.class_label+" ("+d.people+" attending) and will send my $"+d.deposit+" deposit by "+d.payment+". My email is "+d.email+".";
+      .then(function(r){{ return r.json().catch(function(){{return {{}}}}).then(function(j){{ return {{r:r,j:j}}; }}); }})
+      .then(function(x){{ var r=x.r, j=x.j;
+        if(r.status===400 && j && j.error){{ msg.textContent=j.error; if(window.turnstile) turnstile.reset(); return; }}
+        if(!r.ok || !j.ok) throw new Error(r.status); f.reset(); if(window.turnstile) turnstile.reset(); var t="Hi Jo Ann, this is "+d.full_name+". I just registered for "+d.class_label+" ("+d.people+" attending) and will send my $"+d.deposit+" deposit by "+d.payment+". My email is "+d.email+".";
         msg.innerHTML="<b>Thank you, your place is held.</b> Send your $"+d.deposit+" deposit to Jo Ann by Zelle or PayPal, then let her know it's on its way:<br><a class=\\"btn\\" href=\\"sms:+15204038200?&body="+encodeURIComponent(t)+"\\">Text Jo Ann</a>"; }})
       .catch(function(){{ msg.innerHTML="Your email app is opening with your registration filled in. Press send and it goes to Jo Ann. If nothing opens, email <a href=\\""+mailto(d)+"\\">{JO_EMAIL}</a> or call 520-403-8200."; location.href=mailto(d); }})
       .finally(function(){{ btn.disabled=false; }});
