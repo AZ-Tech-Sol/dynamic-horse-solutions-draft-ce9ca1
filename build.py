@@ -5,6 +5,7 @@ import io
 RELEASE = "release.html"   # the Dynamic Horse-branded release on this site (Angel 14:14); the short link still serves the old staging page
 WEBHOOK = "https://n8n.aztechsol.com/webhook/dhs-registration"
 JO_EMAIL = "az.horsesensetraining@gmail.com"
+SITE = "https://dynamichorsesolutions.com"   # share images and og:url need the full address
 NAV = [("index.html", "Home"), ("classes.html", "Classes"), ("about.html", "About"), ("contact.html", "Contact")]
 CLASS_PAGES = ("part-1.html", "part-2.html", "part-3.html")   # the Classes item stays current on these
 
@@ -23,8 +24,17 @@ def frame(slug, title, desc, body):
 <meta name="description" content="{desc}">
 <link rel="icon" href="assets/favicon-512.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/favicon-512.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dynamic Horse Solutions">
 <meta property="og:title" content="{title}">
-<meta property="og:image" content="assets/og.png">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="{SITE}/{"" if slug == "index.html" else slug}">
+<meta property="og:image" content="{SITE}/assets/og/{slug[:-5]}.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{title}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{SITE}/assets/og/{slug[:-5]}.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
