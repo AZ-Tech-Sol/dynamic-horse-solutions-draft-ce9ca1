@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Register — Dynamic Horse Solutions</title>
+<meta name="description" content="Register for an Equine Biomechanics class with Jo Ann Lewis and Vanessa Helvey.">
+<link rel="icon" href="assets/favicon-512.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon-512.png">
+<meta property="og:title" content="Register — Dynamic Horse Solutions">
+<meta property="og:image" content="assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Dynamic Horse Solutions, home"><img src="assets/mark.svg" alt="" width="48" height="48"></a>
+  <nav class="wide" aria-label="Menu"><a href="index.html">Home</a><a href="classes.html">Classes</a><a href="register.html" aria-current="page">Register</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="release" href="https://link.aztechsol.com/bewell-release">Sign the media release</a></nav>
+  <details class="narrow"><summary aria-label="Menu"><span></span><span></span><span></span></summary>
+    <nav aria-label="Menu"><a href="index.html">Home</a><a href="classes.html">Classes</a><a href="register.html" aria-current="page">Register</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="release" href="https://link.aztechsol.com/bewell-release">Sign the media release</a></nav></details>
+</header>
+<main>
+
+<section class="page-head">
+  <h1>Register</h1>
+  <p class="lede center">Save your place, and Jo Ann will confirm by email or text. Payment is by Zelle or PayPal to Jo Ann, as she'll explain when she confirms.</p>
+</section>
+
+<section class="form-wrap">
+  <form id="reg" class="reg" novalidate>
+    <label>Class
+      <select name="class" id="class" required>
+        <option value="part-1">Part I · Sat, Nov 7 · 9 AM–1 PM · $110 per person</option>
+        <option value="part-2">Part II · February 2027 · hold a place</option>
+        <option value="part-3">Part III · April 2027 · hold a place</option>
+      </select>
+    </label>
+    <label>Full name <input name="full_name" autocomplete="name" required></label>
+    <div class="two">
+      <label>Email <input name="email" type="email" autocomplete="email" required></label>
+      <label>Phone <input name="phone" type="tel" autocomplete="tel" required></label>
+    </div>
+    <div class="two">
+      <label>People attending <input name="people" type="number" min="1" max="20" value="1" required></label>
+      <label>Horses you'll be thinking of <span class="opt">(optional)</span> <input name="horses" type="number" min="0" max="20" value="1"></label>
+    </div>
+    <fieldset>
+      <legend>How you'll pay Jo Ann</legend>
+      <label class="inline"><input type="radio" name="payment" value="Zelle" checked> Zelle</label>
+      <label class="inline"><input type="radio" name="payment" value="PayPal"> PayPal</label>
+    </fieldset>
+    <label>Anything Jo Ann should know <span class="opt">(optional)</span> <textarea name="notes" rows="3"></textarea></label>
+    <p class="small">Attending Saturday? The class is being filmed. Please also <a href="https://link.aztechsol.com/bewell-release">sign the media release</a>.</p>
+    <button class="btn" type="submit">Send my registration</button>
+    <p id="msg" class="msg" role="status" aria-live="polite"></p>
+  </form>
+</section>
+<script>
+(function(){
+  var f=document.getElementById("reg"), msg=document.getElementById("msg");
+  var q=new URLSearchParams(location.search).get("class"); if(q) document.getElementById("class").value=q;
+  function mailto(d){
+    var sel=f.querySelector("#class"), cls=sel.options[sel.selectedIndex].text;
+    var body="Registration\n\nClass: "+cls+"\nName: "+d.full_name+"\nEmail: "+d.email+"\nPhone: "+d.phone+"\nPeople: "+d.people+"\nHorses: "+(d.horses||"")+"\nPaying by: "+d.payment+"\nNotes: "+(d.notes||"");
+    return "mailto:az.horsesensetraining@gmail.com?subject="+encodeURIComponent("Registration: "+cls.split(" · ")[0]+" · "+d.full_name)+"&body="+encodeURIComponent(body);
+  }
+  f.addEventListener("submit",function(e){
+    e.preventDefault();
+    if(!f.checkValidity()){ f.reportValidity(); return; }
+    var d=Object.fromEntries(new FormData(f).entries());
+    d.class_label=f.querySelector("#class").selectedOptions[0].text; d.submitted_at=new Date().toISOString(); d.page=location.href;
+    var btn=f.querySelector("button"); btn.disabled=true; msg.textContent="Sending…";
+    fetch("https://n8n.aztechsol.com/webhook/dhs-registration",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})
+      .then(function(r){ if(!r.ok) throw new Error(r.status); f.reset(); msg.innerHTML="Thank you, you're registered. Jo Ann will confirm and send payment details."; })
+      .catch(function(){ msg.innerHTML="Your email app is opening with your registration filled in. Press send and it goes to Jo Ann. If nothing opens, email <a href=\""+mailto(d)+"\">az.horsesensetraining@gmail.com</a> or call 520-403-8200."; location.href=mailto(d); })
+      .finally(function(){ btn.disabled=false; });
+  });
+})();
+</script>
+
+</main>
+<footer>
+  <img src="assets/logo.svg" alt="Dynamic Horse Solutions" width="140" height="140">
+  <p><a href="classes.html">Classes</a> · <a href="register.html">Register</a> · <a href="https://link.aztechsol.com/bewell-release">Media release</a> · <a href="contact.html">Contact</a></p>
+  <p>© 2026 Dynamic Horse Solutions · Tucson, Arizona</p>
+</footer>
+</body>
+</html>

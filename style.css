@@ -105,3 +105,61 @@ footer img{margin:0 auto .5rem}
 @media (min-width:720px){.chase img{width:150px}}
 .duo{width:min(100%,520px);border-radius:48% 48% 22px 22px / 60% 60% 22px 22px;
   -webkit-mask-image:radial-gradient(ellipse 78% 82% at 50% 42%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 78% 82% at 50% 42%,#000 70%,transparent 100%)}
+
+/* 12:34, Angel: a real multi-page site — menu, classes, registration, workbook, release */
+.top nav.wide{display:none;align-items:center;gap:1.1rem}
+@media (min-width:900px){.top nav.wide{display:flex}.top details.narrow{display:none}}
+.top nav a[aria-current="page"]{color:var(--rust);border-bottom:2px solid var(--terra)}
+.top nav a.release{background:var(--terra);color:var(--on-aqua);padding:.45rem .7rem;border-radius:3px;letter-spacing:.08em}
+.top details.narrow{position:relative}
+.top details.narrow summary{list-style:none;cursor:pointer;width:44px;height:44px;display:grid;place-content:center;gap:5px}
+.top details.narrow summary::-webkit-details-marker{display:none}
+.top details.narrow summary span{display:block;width:24px;height:2px;background:var(--teal);border-radius:2px}
+.top details.narrow[open] summary span:nth-child(2){opacity:0}
+.top details.narrow nav{display:flex;flex-direction:column;position:absolute;right:0;top:52px;min-width:240px;
+  background:var(--paper);border:1px solid #cdd3cc;border-radius:6px;padding:.5rem;box-shadow:0 10px 30px rgba(22,38,43,.15)}
+.top details.narrow nav a{padding:.75rem .75rem;font:600 .9rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--teal);text-decoration:none;border:0}
+.top details.narrow nav a.release{margin-top:.25rem;text-align:center}
+
+.btn{display:inline-block;font:600 .85rem var(--sans);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+  background:var(--terra);color:var(--on-aqua);padding:.8rem 1.2rem;border-radius:4px;border:0;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--teal);border:1.5px solid var(--teal)}
+.btn:disabled{opacity:.6}
+.where{margin:0 0 .5rem;color:var(--teal)}
+.price{font:600 1.8rem var(--display);color:var(--teal);margin:.25rem 0}
+.price span{font:500 .8rem var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.incl,.small{font-size:.92rem;color:var(--muted)}
+.actions{margin:1rem 0 .25rem}
+.center{text-align:center;margin-left:auto;margin-right:auto}
+.page-head{text-align:center;padding-bottom:0}
+.page-head h1{font-size:clamp(2.4rem,9vw,3.8rem)}
+.extras{display:grid;gap:1rem;margin:1.5rem 0 2rem}
+@media (min-width:720px){.extras{grid-template-columns:1fr 1fr}}
+.extra{background:var(--sage);border-radius:6px;padding:1.25rem var(--gutter)}
+.extra h3{font-size:1.5rem}
+.later-head{margin-top:1rem}
+.later .small a{color:var(--rust)}
+
+.teaser{display:grid;grid-template-columns:110px 1fr;gap:1.25rem;align-items:center}
+@media (min-width:720px){.teaser{grid-template-columns:150px 1fr}}
+.teaser h2{text-align:left;font-size:clamp(1.3rem,4.5vw,1.9rem)}
+.teaser p{margin:.25rem 0}
+.chase-oval{width:100%;aspect-ratio:296/424;object-fit:cover;border-radius:50%;border:3px solid var(--terra);box-shadow:0 0 0 5px var(--paper),0 0 0 6px rgba(92,156,168,.45)}
+.mark-story{text-align:center}
+.mark-story img{margin:0 auto .75rem}
+
+.form-wrap{max-width:640px}
+.reg{display:grid;gap:1rem}
+.reg label{display:grid;gap:.35rem;font:500 .95rem var(--sans);color:var(--teal)}
+.reg .opt{font-weight:400;color:var(--muted)}
+.reg input,.reg select,.reg textarea{font:400 1rem var(--sans);color:var(--ink);background:#fffaf2;border:1px solid #c5c9bf;border-radius:4px;padding:.7rem .75rem;width:100%;min-width:0}
+.reg select{appearance:auto}
+.reg input:focus,.reg select:focus,.reg textarea:focus{outline:2px solid var(--terra);outline-offset:1px}
+.reg .two{display:grid;gap:1rem}
+@media (min-width:560px){.reg .two{grid-template-columns:1fr 1fr}}
+.reg fieldset{border:1px solid #c5c9bf;border-radius:4px;padding:.6rem .9rem;margin:0}
+.reg legend{font:500 .95rem var(--sans);color:var(--teal);padding:0 .3rem}
+.reg label.inline{display:inline-flex;align-items:center;gap:.4rem;margin-right:1.25rem;font-weight:400;color:var(--ink)}
+.reg label.inline input{width:auto}
+.reg .btn{justify-self:start;font-size:.9rem}
+.msg{margin:0;color:var(--teal);min-height:1.5em}
