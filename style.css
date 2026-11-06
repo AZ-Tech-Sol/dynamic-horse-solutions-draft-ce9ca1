@@ -189,3 +189,30 @@ footer img{margin:0 auto .5rem}
 .intro .logo{width:min(180px,45vw);margin:0 auto 1.25rem}
 .intro .lede{text-align:left;max-width:40em;margin:0 auto 1.25rem}
 .credit a{color:inherit}
+
+/* 13:37, Angel: a card per class on Classes and Home, each opening its own page */
+.class-grid{display:grid;gap:1rem}
+@media (min-width:760px){.class-grid{grid-template-columns:repeat(3,1fr)}}
+.class-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:var(--ink);transition:transform .2s ease,box-shadow .2s ease}
+.class-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(22,38,43,.12)}
+.class-card img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:0}
+.cc-body{padding:1rem 1.1rem 1.2rem;display:flex;flex-direction:column;gap:.35rem;flex:1}
+.cc-body .num{margin:0;font:600 .8rem var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--rust)}
+.cc-body h3{margin:0;font-size:1.6rem;color:var(--teal)}
+.cc-body .when{margin:0;font-size:1.1rem}
+.cc-body .more{margin-top:auto;padding-top:.5rem;font:600 .85rem var(--sans);color:var(--btn)}
+.badge{align-self:flex-start;display:inline-block;font:600 .72rem var(--sans);letter-spacing:.12em;text-transform:uppercase;padding:.35rem .6rem;border-radius:999px}
+.badge.full{background:#e9ecef;color:#4a555a;border:1px solid #cfd6da}
+.badge.open{background:#e1f0e6;color:#2f6a43;border:1px solid var(--green)}
+.badge.big{font-size:.82rem;padding:.45rem .8rem}
+.class-hero{background-size:cover;background-position:center;color:#fff;max-width:none;padding:0;min-height:min(52vh,460px);display:flex;align-items:flex-end}
+.ch-copy{width:100%;max-width:var(--max);margin:0 auto;padding:2rem var(--gutter) 2.25rem}
+.ch-copy .num{margin:0 0 .35rem;font:600 .8rem var(--sans);letter-spacing:.22em;text-transform:uppercase;color:#cfe6ea}
+.ch-copy h1{color:#fff;font-size:clamp(2.4rem,9vw,4.4rem);margin:0}
+.ch-copy .parts{margin:.25rem 0 0;font:500 .9rem var(--display);letter-spacing:.2em;text-transform:uppercase;color:#e7f1f2}
+.class-detail .lede{max-width:40em}
+.facts{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.25rem;margin:1rem 0}
+.facts p{margin:.2rem 0}
+.deposit{background:#fff;border:1px solid var(--line);border-left:4px solid var(--green);border-radius:var(--radius);padding:.9rem 1.1rem;margin-bottom:1rem}
+.deposit p{margin:.2rem 0}
+.form-wrap h2{text-align:left}

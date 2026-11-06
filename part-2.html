@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Part II: The Thoracic Sling — Dynamic Horse Solutions</title>
+<meta name="description" content="Part II of Equine Biomechanics, The Thoracic Sling, at Copper Horse Ranch in Tucson.">
+<link rel="icon" href="assets/favicon-512.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon-512.png">
+<meta property="og:title" content="Part II: The Thoracic Sling — Dynamic Horse Solutions">
+<meta property="og:image" content="assets/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Dynamic Horse Solutions, home"><img src="assets/mark.svg" alt="" width="48" height="48"></a>
+  <nav class="wide" aria-label="Menu"><a href="index.html">Home</a><a href="classes.html" aria-current="page">Classes</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="release" href="https://link.aztechsol.com/bewell-release">Sign the media release</a></nav>
+  <details class="narrow"><summary aria-label="Menu"><span></span><span></span><span></span></summary>
+    <nav aria-label="Menu"><a href="index.html">Home</a><a href="classes.html" aria-current="page">Classes</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="release" href="https://link.aztechsol.com/bewell-release">Sign the media release</a></nav></details>
+</header>
+<main>
+<section class="class-hero" style="background-image:linear-gradient(180deg,rgba(22,38,43,.35),rgba(22,38,43,.85)),url(assets/class-2-thoracic-sling.webp)">
+  <div class="ch-copy">
+    <p class="num">Part II · Equine Biomechanics</p>
+    <h1>The Thoracic Sling</h1>
+    <p class="parts">Chest • Shoulder • Forelimb</p>
+  </div>
+</section>
+<section class="class-detail">
+  <p class="badge open big">Registration open</p>
+  <p class="lede">The thoracic sling: the muscles that carry the horse's chest between its front legs, and how they lift the front end into a weight bearing posture.</p>
+  <div class="facts">
+    <p class="when">February 2027<br><span>date to be announced</span></p>
+    <p class="where">Copper Horse Ranch · 9887 N Camino de Oeste · Tucson, AZ</p>
+    <p class="incl">Lecture · demonstration · guided skeleton exploration · workbook included</p>
+  </div>
+  <p class="price">$220 <span>per person · $110 deposit holds your place</span></p>
+  <p><a class="btn" href="#register">Register with a $110 deposit</a></p>
+</section>
+
+<section class="form-wrap" id="register">
+  <h2>Register for Part II</h2>
+  <div class="deposit">
+    <p><b>$220</b> for the class. A <b>$110 deposit</b> (50%) holds your place now; the balance is due once the date is set.</p>
+    <p class="small">Jo Ann confirms your place and sends deposit details by email or text. Deposits are paid by Zelle or PayPal.</p>
+  </div>
+  <form id="reg" class="reg" novalidate>
+    <input type="hidden" name="class" value="part-2">
+    <input type="hidden" name="class_label" value="Part II · The Thoracic Sling · February 2027 · $220, $110 deposit">
+    <label>Full name <input name="full_name" autocomplete="name" required></label>
+    <div class="two">
+      <label>Email <input name="email" type="email" autocomplete="email" required></label>
+      <label>Phone <input name="phone" type="tel" autocomplete="tel" required></label>
+    </div>
+    <div class="two">
+      <label>People attending <input name="people" type="number" min="1" max="20" value="1" required></label>
+      <label>Horses you'll be thinking of <span class="opt">(optional)</span> <input name="horses" type="number" min="0" max="20" value="1"></label>
+    </div>
+    <fieldset>
+      <legend>How you'll pay the deposit</legend>
+      <label class="inline"><input type="radio" name="payment" value="Zelle" checked> Zelle</label>
+      <label class="inline"><input type="radio" name="payment" value="PayPal"> PayPal</label>
+    </fieldset>
+    <label>Anything Jo Ann should know <span class="opt">(optional)</span> <textarea name="notes" rows="3"></textarea></label>
+    <button class="btn" type="submit">Hold my place</button>
+    <p id="msg" class="msg" role="status" aria-live="polite"></p>
+  </form>
+</section>
+<script>
+(function(){
+  var f=document.getElementById("reg"), msg=document.getElementById("msg");
+  function mailto(d){
+    var body="Registration\n\nClass: "+d.class_label+"\nName: "+d.full_name+"\nEmail: "+d.email+"\nPhone: "+d.phone+"\nPeople: "+d.people+"\nHorses: "+(d.horses||"")+"\nDeposit by: "+d.payment+"\nNotes: "+(d.notes||"");
+    return "mailto:az.horsesensetraining@gmail.com?subject="+encodeURIComponent("Registration: Part II · "+d.full_name)+"&body="+encodeURIComponent(body);
+  }
+  f.addEventListener("submit",function(e){
+    e.preventDefault();
+    if(!f.checkValidity()){ f.reportValidity(); return; }
+    var d=Object.fromEntries(new FormData(f).entries()); d.deposit=110; d.total=220; d.submitted_at=new Date().toISOString(); d.page=location.href;
+    var btn=f.querySelector("button"); btn.disabled=true; msg.textContent="Sending…";
+    fetch("https://n8n.aztechsol.com/webhook/dhs-registration",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})
+      .then(function(r){ if(!r.ok) throw new Error(r.status); f.reset(); msg.innerHTML="Thank you, your place is held. Jo Ann will confirm and send deposit details."; })
+      .catch(function(){ msg.innerHTML="Your email app is opening with your registration filled in. Press send and it goes to Jo Ann. If nothing opens, email <a href=\""+mailto(d)+"\">az.horsesensetraining@gmail.com</a> or call 520-403-8200."; location.href=mailto(d); })
+      .finally(function(){ btn.disabled=false; });
+  });
+})();
+</script>
+
+</main>
+<footer>
+  <img src="assets/logo.svg" alt="Dynamic Horse Solutions" width="140" height="140">
+  <p><a href="classes.html">Classes</a> · <a href="https://link.aztechsol.com/bewell-release">Media release</a> · <a href="contact.html">Contact</a></p>
+  <p>© 2026 Dynamic Horse Solutions · Tucson, Arizona</p>
+  <p class="credit">Photos: <a href="https://commons.wikimedia.org/wiki/File:Domestic_horse_at_Suryachaur_and_the_mountains_in_the_back1.jpg">Shadow Ayush</a> · <a href="https://commons.wikimedia.org/wiki/File:Saint-Laurent-d%27Aigouze_-_Camargue_horses_-_04.jpg">Benjamin Smith</a> · <a href="https://commons.wikimedia.org/wiki/File:NewForestPonies_sunrise.jpg">Joana Kruse</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, via Wikimedia Commons.</p>
+</footer>
+</body>
+</html>

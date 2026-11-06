@@ -5,10 +5,11 @@ import io
 RELEASE = "https://link.aztechsol.com/bewell-release"
 WEBHOOK = "https://n8n.aztechsol.com/webhook/dhs-registration"
 JO_EMAIL = "az.horsesensetraining@gmail.com"
-NAV = [("index.html", "Home"), ("classes.html", "Classes"), ("register.html", "Register"), ("about.html", "About"), ("contact.html", "Contact")]
+NAV = [("index.html", "Home"), ("classes.html", "Classes"), ("about.html", "About"), ("contact.html", "Contact")]
+CLASS_PAGES = ("part-1.html", "part-2.html", "part-3.html")   # the Classes item stays current on these
 
 def frame(slug, title, desc, body):
-    links = "".join(f'<a href="{h}"{" aria-current=\"page\"" if h == slug else ""}>{t}</a>' for h, t in NAV)
+    links = "".join(f'<a href="{h}"{" aria-current=\"page\"" if h == slug or (h == "classes.html" and slug in CLASS_PAGES) else ""}>{t}</a>' for h, t in NAV)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -38,7 +39,7 @@ def frame(slug, title, desc, body):
 </main>
 <footer>
   <img src="assets/logo.svg" alt="Dynamic Horse Solutions" width="140" height="140">
-  <p><a href="classes.html">Classes</a> · <a href="register.html">Register</a> · <a href="{RELEASE}">Media release</a> · <a href="contact.html">Contact</a></p>
+  <p><a href="classes.html">Classes</a> · <a href="{RELEASE}">Media release</a> · <a href="contact.html">Contact</a></p>
   <p>© 2026 Dynamic Horse Solutions · Tucson, Arizona</p>
   <p class="credit">Photos: <a href="https://commons.wikimedia.org/wiki/File:Domestic_horse_at_Suryachaur_and_the_mountains_in_the_back1.jpg">Shadow Ayush</a> · <a href="https://commons.wikimedia.org/wiki/File:Saint-Laurent-d%27Aigouze_-_Camargue_horses_-_04.jpg">Benjamin Smith</a> · <a href="https://commons.wikimedia.org/wiki/File:NewForestPonies_sunrise.jpg">Joana Kruse</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, via Wikimedia Commons.</p>
 </footer>
@@ -46,41 +47,131 @@ def frame(slug, title, desc, body):
 </html>
 """
 
-SATURDAY = """
-  <article class="part part-one">
-    <div class="band">
-      <p class="num">Part I · This Saturday</p>
-      <h3>The Hind End Junction</h3>
-      <p class="parts">Pelvis • Sacrum • Lumbar Spine</p>
-    </div>
-    <div class="part-body">
-      <img src="assets/hind-end.jpg" alt="Drawing of a horse's skeleton with the lumbar spine, sacrum and pelvis highlighted" width="842" height="716">
-      <div>
-        <p class="when">Saturday, November 7, 2026<br><span>9 AM – 1 PM</span></p>
-        <p class="where">Copper Horse Ranch<br>9887 N Camino de Oeste · Tucson, AZ</p>
-        <p class="price">$110 <span>per person</span></p>
-        <p class="incl">Lecture · demonstration · guided skeleton exploration · workbook included</p>
-        <p class="actions"><a class="btn" href="register.html?class=part-1">Register for Saturday</a></p>
-        <p class="small">Space is limited. Early registration encouraged.</p>
-      </div>
-    </div>
-  </article>"""
+CLASSES_DATA = [
+    dict(slug="part-1", num="Part I", title="The Hind End Junction", parts="Pelvis • Sacrum • Lumbar Spine",
+         img="class-1-hind-end", when="Saturday, November 7, 2026", time="9 AM – 1 PM", status="booked",
+         blurb="The bones of the pelvis, sacrum and lumbar spine, the sacroiliac and lumbosacral joints, the hip, and the medial gluteal muscle that drives impulsion and lifts the back."),
+    dict(slug="part-2", num="Part II", title="The Thoracic Sling", parts="Chest • Shoulder • Forelimb",
+         img="class-2-thoracic-sling", when="February 2027", time="date to be announced", status="open",
+         blurb="The thoracic sling: the muscles that carry the horse's chest between its front legs, and how they lift the front end into a weight bearing posture."),
+    dict(slug="part-3", num="Part III", title="Poll &amp; TMJ", parts="Poll • Jaw • Upper Neck",
+         img="class-3-poll-tmj", when="April 2027", time="date to be announced", status="open",
+         blurb="The poll and the temporomandibular joint, where the head meets the spine, and how the jaw and upper neck shape the whole horse's way of going."),
+]
+PRICE_TOTAL, PRICE_DEPOSIT = 220, 110   # Angel 2026-11-06 13:37: an unscheduled class is $220, and $110 holds the place (50%)
+WHERE = "Copper Horse Ranch · 9887 N Camino de Oeste · Tucson, AZ"
+INCL = "Lecture · demonstration · guided skeleton exploration · workbook included"
 
-LATER = """
-  <div class="later">
-    <article class="part">
-      <p class="num">Part II</p>
-      <h3>The Thoracic Sling</h3>
-      <p class="when">February 2027 <em>(date TBD)</em></p>
-      <p class="small"><a href="register.html?class=part-2">Hold a place</a></p>
+def class_card(c):
+    badge = '<span class="badge full">Fully booked</span>' if c["status"] == "booked" else f'<span class="badge open">Registration open · ${PRICE_DEPOSIT} deposit</span>'
+    return f'''<a class="class-card" href="{c["slug"]}.html">
+  <img src="assets/{c["img"]}.webp" alt="" width="1200" height="900" loading="lazy">
+  <div class="cc-body">
+    <p class="num">{c["num"]}</p>
+    <h3>{c["title"]}</h3>
+    <p class="when">{c["when"]}</p>
+    {badge}
+    <span class="more">View the class →</span>
+  </div>
+</a>'''
+
+CLASS_GRID = '<div class="class-grid">' + "".join(class_card(c) for c in CLASSES_DATA) + '</div>'
+
+def reg_form(c):
+    return f'''
+<section class="form-wrap" id="register">
+  <h2>Register for {c["num"]}</h2>
+  <div class="deposit">
+    <p><b>${PRICE_TOTAL}</b> for the class. A <b>${PRICE_DEPOSIT} deposit</b> (50%) holds your place now; the balance is due once the date is set.</p>
+    <p class="small">Jo Ann confirms your place and sends deposit details by email or text. Deposits are paid by Zelle or PayPal.</p>
+  </div>
+  <form id="reg" class="reg" novalidate>
+    <input type="hidden" name="class" value="{c["slug"]}">
+    <input type="hidden" name="class_label" value="{c["num"]} · {c["title"].replace("&amp;","&")} · {c["when"]} · ${PRICE_TOTAL}, ${PRICE_DEPOSIT} deposit">
+    <label>Full name <input name="full_name" autocomplete="name" required></label>
+    <div class="two">
+      <label>Email <input name="email" type="email" autocomplete="email" required></label>
+      <label>Phone <input name="phone" type="tel" autocomplete="tel" required></label>
+    </div>
+    <div class="two">
+      <label>People attending <input name="people" type="number" min="1" max="20" value="1" required></label>
+      <label>Horses you'll be thinking of <span class="opt">(optional)</span> <input name="horses" type="number" min="0" max="20" value="1"></label>
+    </div>
+    <fieldset>
+      <legend>How you'll pay the deposit</legend>
+      <label class="inline"><input type="radio" name="payment" value="Zelle" checked> Zelle</label>
+      <label class="inline"><input type="radio" name="payment" value="PayPal"> PayPal</label>
+    </fieldset>
+    <label>Anything Jo Ann should know <span class="opt">(optional)</span> <textarea name="notes" rows="3"></textarea></label>
+    <button class="btn" type="submit">Hold my place</button>
+    <p id="msg" class="msg" role="status" aria-live="polite"></p>
+  </form>
+</section>
+<script>
+(function(){{
+  var f=document.getElementById("reg"), msg=document.getElementById("msg");
+  function mailto(d){{
+    var body="Registration\\n\\nClass: "+d.class_label+"\\nName: "+d.full_name+"\\nEmail: "+d.email+"\\nPhone: "+d.phone+"\\nPeople: "+d.people+"\\nHorses: "+(d.horses||"")+"\\nDeposit by: "+d.payment+"\\nNotes: "+(d.notes||"");
+    return "mailto:{JO_EMAIL}?subject="+encodeURIComponent("Registration: {c["num"]} · "+d.full_name)+"&body="+encodeURIComponent(body);
+  }}
+  f.addEventListener("submit",function(e){{
+    e.preventDefault();
+    if(!f.checkValidity()){{ f.reportValidity(); return; }}
+    var d=Object.fromEntries(new FormData(f).entries()); d.deposit={PRICE_DEPOSIT}; d.total={PRICE_TOTAL}; d.submitted_at=new Date().toISOString(); d.page=location.href;
+    var btn=f.querySelector("button"); btn.disabled=true; msg.textContent="Sending…";
+    fetch("{WEBHOOK}",{{method:"POST",headers:{{"Content-Type":"application/json"}},body:JSON.stringify(d)}})
+      .then(function(r){{ if(!r.ok) throw new Error(r.status); f.reset(); msg.innerHTML="Thank you, your place is held. Jo Ann will confirm and send deposit details."; }})
+      .catch(function(){{ msg.innerHTML="Your email app is opening with your registration filled in. Press send and it goes to Jo Ann. If nothing opens, email <a href=\\""+mailto(d)+"\\">{JO_EMAIL}</a> or call 520-403-8200."; location.href=mailto(d); }})
+      .finally(function(){{ btn.disabled=false; }});
+  }});
+}})();
+</script>
+'''
+
+def class_page(c):
+    hero = f'''<section class="class-hero" style="background-image:linear-gradient(180deg,rgba(22,38,43,.35),rgba(22,38,43,.85)),url(assets/{c["img"]}.webp)">
+  <div class="ch-copy">
+    <p class="num">{c["num"]} · Equine Biomechanics</p>
+    <h1>{c["title"]}</h1>
+    <p class="parts">{c["parts"]}</p>
+  </div>
+</section>'''
+    facts = f'''<div class="facts">
+    <p class="when">{c["when"]}<br><span>{c["time"]}</span></p>
+    <p class="where">{WHERE}</p>
+    <p class="incl">{INCL}</p>
+  </div>'''
+    if c["status"] == "booked":
+        body = f'''
+<section class="class-detail">
+  <p class="badge full big">Fully booked</p>
+  <p class="lede">{c["blurb"]}</p>
+  {facts}
+  <div class="extras">
+    <article class="extra">
+      <h3>The Media Release</h3>
+      <p>This class is being filmed for the online series. If you're attending, please sign the consent to be filmed before you arrive. It takes a minute on your phone.</p>
+      <p><a class="btn" href="{RELEASE}">Sign the media release</a></p>
     </article>
-    <article class="part">
-      <p class="num">Part III</p>
-      <h3>Poll &amp; TMJ</h3>
-      <p class="when">April 2027 <em>(date TBD)</em></p>
-      <p class="small"><a href="register.html?class=part-3">Hold a place</a></p>
+    <article class="extra">
+      <h3>The Workbook</h3>
+      <p>The class workbook, <em>The Hind End Junction</em>: posture, the anatomy of the hind end, and room for your notes.</p>
+      <p><a class="btn ghost" href="assets/hind-end-junction-workbook.pdf" download>Download the workbook (PDF)</a></p>
     </article>
-  </div>"""
+  </div>
+  <p class="note">Missed this one? It's being filmed for the <a href="index.html#videos">online series</a>, and Parts <a href="part-2.html">II</a> and <a href="part-3.html">III</a> are open for registration.</p>
+</section>'''
+    else:
+        body = f'''
+<section class="class-detail">
+  <p class="badge open big">Registration open</p>
+  <p class="lede">{c["blurb"]}</p>
+  {facts}
+  <p class="price">${PRICE_TOTAL} <span>per person · ${PRICE_DEPOSIT} deposit holds your place</span></p>
+  <p><a class="btn" href="#register">Register with a ${PRICE_DEPOSIT} deposit</a></p>
+</section>
+{reg_form(c)}'''
+    return hero + body
 
 HOME = f"""
 <section class="hero-slider" aria-label="Equine Biomechanics">
@@ -93,7 +184,7 @@ HOME = f"""
     <p class="eyebrow">A three-part educational series for horse owners &amp; riders</p>
     <h1>Equine Biomechanics</h1>
     <p class="triad"><span>Structure</span><i>•</i><span>Posture</span><i>•</i><span>Function</span></p>
-    <p class="hero-actions"><a class="btn" href="register.html?class=part-1">Register for Saturday</a><a class="btn light" href="classes.html">See the classes</a></p>
+    <p class="hero-actions"><a class="btn" href="classes.html">See the classes</a><a class="btn light" href="{RELEASE}">Sign the media release</a></p>
   </div>
   <div class="dots" role="group" aria-label="Photos"><button type="button" aria-label="Show photo 1" aria-current="true"></button><button type="button" aria-label="Show photo 2"></button><button type="button" aria-label="Show photo 3"></button></div>
 </section>
@@ -114,10 +205,8 @@ HOME = f"""
 </section>
 
 <section class="series">
-  <h2>Next Class</h2>
-  {SATURDAY}
-  {LATER}
-  <p class="note"><a href="classes.html">See every class, the workbook and the media release →</a></p>
+  <h2>The Complete Series</h2>
+  {CLASS_GRID}
 </section>
 
 <section class="teaser">
@@ -142,86 +231,18 @@ CLASSES = f"""
   <h1>Classes</h1>
   <p class="lede center">Equine Biomechanics: Structure · Posture · Function. Three parts, each a morning at the ranch with a real equine skeleton.</p>
 </section>
-
 <section class="series">
-  {SATURDAY}
-
-  <div class="extras">
-    <article class="extra">
-      <h3>The Workbook</h3>
-      <p>Saturday's workbook, <em>The Hind End Junction</em>: posture, the anatomy of the hind end, and room for your notes. Download it to print or to keep on your tablet.</p>
-      <p><a class="btn ghost" href="assets/hind-end-junction-workbook.pdf" download>Download the workbook (PDF)</a></p>
-    </article>
-    <article class="extra">
-      <h3>The Media Release</h3>
-      <p>Saturday's class is being filmed for the online series. If you're attending, please sign the consent to be filmed before you arrive. It takes a minute on your phone.</p>
-      <p><a class="btn ghost" href="{RELEASE}">Sign the media release</a></p>
-    </article>
-  </div>
-
-  <h2 class="later-head">Coming Next</h2>
-  {LATER}
-  <p class="note">Dates for Parts II and III will be announced here. <a href="register.html">Hold a place</a> and Jo Ann will let you know first.</p>
+  {CLASS_GRID}
+  <p class="note">Attending Saturday? Please <a href="{RELEASE}">sign the media release</a> before you arrive.</p>
 </section>
 """
 
-REGISTER = f"""
+REGISTER = """
 <section class="page-head">
   <h1>Register</h1>
-  <p class="lede center">Save your place, and Jo Ann will confirm by email or text. Payment is by Zelle or PayPal to Jo Ann, as she'll explain when she confirms.</p>
+  <p class="lede center">Registration is on each class's own page. <a href="classes.html">Choose a class →</a></p>
 </section>
-
-<section class="form-wrap">
-  <form id="reg" class="reg" novalidate>
-    <label>Class
-      <select name="class" id="class" required>
-        <option value="part-1">Part I · Sat, Nov 7 · 9 AM–1 PM · $110 per person</option>
-        <option value="part-2">Part II · February 2027 · hold a place</option>
-        <option value="part-3">Part III · April 2027 · hold a place</option>
-      </select>
-    </label>
-    <label>Full name <input name="full_name" autocomplete="name" required></label>
-    <div class="two">
-      <label>Email <input name="email" type="email" autocomplete="email" required></label>
-      <label>Phone <input name="phone" type="tel" autocomplete="tel" required></label>
-    </div>
-    <div class="two">
-      <label>People attending <input name="people" type="number" min="1" max="20" value="1" required></label>
-      <label>Horses you'll be thinking of <span class="opt">(optional)</span> <input name="horses" type="number" min="0" max="20" value="1"></label>
-    </div>
-    <fieldset>
-      <legend>How you'll pay Jo Ann</legend>
-      <label class="inline"><input type="radio" name="payment" value="Zelle" checked> Zelle</label>
-      <label class="inline"><input type="radio" name="payment" value="PayPal"> PayPal</label>
-    </fieldset>
-    <label>Anything Jo Ann should know <span class="opt">(optional)</span> <textarea name="notes" rows="3"></textarea></label>
-    <p class="small">Attending Saturday? The class is being filmed. Please also <a href="{RELEASE}">sign the media release</a>.</p>
-    <button class="btn" type="submit">Send my registration</button>
-    <p id="msg" class="msg" role="status" aria-live="polite"></p>
-  </form>
-</section>
-<script>
-(function(){{
-  var f=document.getElementById("reg"), msg=document.getElementById("msg");
-  var q=new URLSearchParams(location.search).get("class"); if(q) document.getElementById("class").value=q;
-  function mailto(d){{
-    var sel=f.querySelector("#class"), cls=sel.options[sel.selectedIndex].text;
-    var body="Registration\\n\\nClass: "+cls+"\\nName: "+d.full_name+"\\nEmail: "+d.email+"\\nPhone: "+d.phone+"\\nPeople: "+d.people+"\\nHorses: "+(d.horses||"")+"\\nPaying by: "+d.payment+"\\nNotes: "+(d.notes||"");
-    return "mailto:{JO_EMAIL}?subject="+encodeURIComponent("Registration: "+cls.split(" · ")[0]+" · "+d.full_name)+"&body="+encodeURIComponent(body);
-  }}
-  f.addEventListener("submit",function(e){{
-    e.preventDefault();
-    if(!f.checkValidity()){{ f.reportValidity(); return; }}
-    var d=Object.fromEntries(new FormData(f).entries());
-    d.class_label=f.querySelector("#class").selectedOptions[0].text; d.submitted_at=new Date().toISOString(); d.page=location.href;
-    var btn=f.querySelector("button"); btn.disabled=true; msg.textContent="Sending…";
-    fetch("{WEBHOOK}",{{method:"POST",headers:{{"Content-Type":"application/json"}},body:JSON.stringify(d)}})
-      .then(function(r){{ if(!r.ok) throw new Error(r.status); f.reset(); msg.innerHTML="Thank you, you're registered. Jo Ann will confirm and send payment details."; }})
-      .catch(function(){{ msg.innerHTML="Your email app is opening with your registration filled in. Press send and it goes to Jo Ann. If nothing opens, email <a href=\\""+mailto(d)+"\\">{JO_EMAIL}</a> or call 520-403-8200."; location.href=mailto(d); }})
-      .finally(function(){{ btn.disabled=false; }});
-  }});
-}})();
-</script>
+<script>location.replace("classes.html");</script>
 """
 
 ABOUT = """
@@ -271,13 +292,14 @@ CONTACT = f"""
     <p><a href="mailto:{JO_EMAIL}">{JO_EMAIL}</a></p>
   </div>
   <p class="place">Classes are held at Copper Horse Ranch<br>9887 N Camino de Oeste · Tucson, AZ</p>
-  <p><a class="btn" href="register.html">Register for a class</a></p>
+  <p><a class="btn" href="classes.html">See the classes</a></p>
 </section>
 """
 
 PAGES = [
     ("index.html", "Dynamic Horse Solutions — Equine Biomechanics", "Equine Biomechanics: Structure · Posture · Function. A three-part series for horse owners and riders in Tucson, taught by Jo Ann Lewis and Vanessa Helvey.", HOME),
     ("classes.html", "Classes — Dynamic Horse Solutions", "Part I, The Hind End Junction, Saturday November 7, 2026 at Copper Horse Ranch, Tucson; then Parts II and III in 2027.", CLASSES),
+    *[(f'{c["slug"]}.html', f'{c["num"]}: {c["title"].replace("&amp;", "&")} — Dynamic Horse Solutions', f'{c["num"]} of Equine Biomechanics, {c["title"].replace("&amp;", "&")}, at Copper Horse Ranch in Tucson.', class_page(c)) for c in CLASSES_DATA],
     ("register.html", "Register — Dynamic Horse Solutions", "Register for an Equine Biomechanics class with Jo Ann Lewis and Vanessa Helvey.", REGISTER),
     ("about.html", "About — Dynamic Horse Solutions", "Jo Ann Lewis, Vanessa Helvey and Chase, the teachers of Equine Biomechanics.", ABOUT),
     ("contact.html", "Contact — Dynamic Horse Solutions", "Reach Jo Ann Lewis about classes, dates and the online series.", CONTACT),
