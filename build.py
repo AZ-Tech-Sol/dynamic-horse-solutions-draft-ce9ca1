@@ -53,6 +53,7 @@ def frame(slug, title, desc, body):
 <footer>
   <img src="assets/logo.svg" alt="Dynamic Horse Solutions" width="140" height="140">
   <p><a href="classes.html">Classes</a> · <a href="contact.html">Contact</a></p>
+  <p class="soon">Coming soon: <a href="podcast.html">Podcast</a> · <a href="book.html">Book</a> · <a href="videos.html">Video series</a></p>
   <p>© 2026 Dynamic Horse Solutions · Tucson, Arizona</p>
   <p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:NewForestPonies_sunrise.jpg">Joana Kruse</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, via Wikimedia Commons.</p>
 </footer>
@@ -182,7 +183,7 @@ def class_page(c):
       <p><a class="btn ghost" href="assets/hind-end-junction-workbook.pdf" download>Download the workbook (PDF)</a></p>
     </article>
   </div>
-  <p class="note">Missed this one? It's being filmed for the <a href="index.html#videos">online series</a>, and Parts <a href="part-2.html">II</a> and <a href="part-3.html">III</a> are open for registration.</p>
+  <p class="note">Missed this one? It's being filmed for the <a href="videos.html">online series</a>, and Parts <a href="part-2.html">II</a> and <a href="part-3.html">III</a> are open for registration.</p>
 </section>'''
     else:
         body = f'''
@@ -195,6 +196,75 @@ def class_page(c):
 </section>
 {reg_form(c)}'''
     return hero + body
+
+# Placeholder pages with a "tell me when it's out" form (Angel, 2026-11-06 16:30). The words are Lena's until Vanessa and Jo Ann send theirs.
+NOTIFY = "https://n8n.aztechsol.com/webhook/dhs-notify"
+COMING_DATA = [
+    dict(slug="podcast", label="The Podcast", img="teachers.jpg", eyebrow="Coming soon · Listen",
+         title="The Dynamic Horse Podcast", sub="Conversations on structure, posture and function",
+         blurb="Jo Ann and Vanessa talk through how a horse is built and how it moves: what they see in the clinic, the questions riders bring them, and the small changes that make a big difference to a horse's comfort and way of going.",
+         ask="Leave your email and we'll let you know when the first episode is out."),
+    dict(slug="book", label="The Book", img="class-2-thoracic-sling.webp", eyebrow="Coming soon · Read",
+         title="The Book", sub="Equine Biomechanics, from the skeleton out",
+         blurb="Everything the series teaches, in one place: the hind end, the thoracic sling, the poll and jaw, and how they work together, with drawings from the classes and room for your own notes.",
+         ask="Leave your email and we'll let you know when the book is ready."),
+    dict(slug="videos", label="The Video Series", img="hero-sunrise.webp", eyebrow="Coming soon · Watch",
+         title="The Video Series", sub="Equine Biomechanics, online and at your own pace",
+         blurb="Each part of the series is being filmed at the ranch, starting with The Hind End Junction on November 7, so you can learn at your own pace and come back to it with your own horse.",
+         ask="Leave your email and we'll let you know when the first part is online."),
+]
+
+def coming_page(x):
+    return f'''<section class="class-hero" style="background-image:linear-gradient(180deg,rgba(22,38,43,.35),rgba(22,38,43,.85)),url(assets/{x["img"]})">
+  <div class="ch-copy">
+    <p class="num">{x["eyebrow"]}</p>
+    <h1>{x["title"]}</h1>
+    <p class="parts">{x["sub"]}</p>
+  </div>
+</section>
+<section class="class-detail">
+  <p class="badge open big">Coming soon</p>
+  <p class="lede">{x["blurb"]}</p>
+</section>
+<section class="form-wrap" id="notify">
+  <h2>Be the first to know</h2>
+  <p>{x["ask"]} One email when it's ready, nothing else.</p>
+  <form id="notify-form" class="reg" novalidate>
+    <input type="hidden" name="interest" value="{x["slug"]}">
+    <div class="two">
+      <label>Name <input name="name" autocomplete="name"></label>
+      <label>Email <input name="email" type="email" autocomplete="email" required></label>
+    </div>
+    <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-5000px">
+    <div class="cf-turnstile" data-sitekey="{TURNSTILE_SITEKEY}" data-action="notify" data-theme="light"></div>
+    <button class="btn" type="submit">Notify me</button>
+    <p id="msg" class="msg" role="status" aria-live="polite"></p>
+  </form>
+</section>
+{TURNSTILE_JS}
+<script>
+(function(){{
+  var f=document.getElementById("notify-form"), msg=document.getElementById("msg");
+  f.addEventListener("submit",function(e){{
+    e.preventDefault();
+    if(!f.checkValidity()){{ f.reportValidity(); return; }}
+    var d=Object.fromEntries(new FormData(f).entries()); d.turnstile_token=d["cf-turnstile-response"]||""; delete d["cf-turnstile-response"];
+    if(!d.turnstile_token){{ msg.textContent="One moment: the security check is still loading. Please try again in a few seconds."; return; }}
+    d.submitted_at=new Date().toISOString(); d.page=location.href;
+    var btn=f.querySelector("button"); btn.disabled=true; msg.textContent="Sending…";
+    fetch("{NOTIFY}",{{method:"POST",headers:{{"Content-Type":"application/json"}},body:JSON.stringify(d)}})
+      .then(function(r){{ return r.json().catch(function(){{return {{}}}}).then(function(j){{ return {{r:r,j:j}}; }}); }})
+      .then(function(x){{ var r=x.r, j=x.j;
+        if(r.status===400 && j && j.error){{ msg.textContent=j.error; if(window.turnstile) turnstile.reset(); return; }}
+        if(!r.ok || !j.ok) throw new Error(r.status);
+        f.reset(); if(window.turnstile) turnstile.reset(); msg.innerHTML="<b>Thank you, you're on the list.</b> We'll email you when it's ready.";
+      }})
+      .catch(function(){{ msg.innerHTML="That didn't go through. Please try again, or email <a href=\\"mailto:{JO_EMAIL}\\">{JO_EMAIL}</a> and we'll add you."; if(window.turnstile) turnstile.reset(); }})
+      .finally(function(){{ btn.disabled=false; }});
+  }});
+}})();
+</script>
+'''
 
 HOME = f"""
 <section class="hero-slider single" aria-label="Equine Biomechanics">
@@ -234,6 +304,8 @@ HOME = f"""
   <h2>Watch the Series Online</h2>
   <p>Each part of the series will be available here as video, so you can learn at your own pace and come back to it with your own horse.</p>
   <p class="status">Coming soon</p>
+  <p><a class="btn ghost light" href="videos.html">Notify me</a></p>
+  <p class="soon-links">Also on the way: <a href="podcast.html">the podcast</a> and <a href="book.html">the book</a>.</p>
 </section>
 """
 
@@ -314,6 +386,7 @@ PAGES = [
     ("register.html", "Register — Dynamic Horse Solutions", "Register for an Equine Biomechanics class with Jo Ann Lewis and Vanessa Helvey.", REGISTER),
     ("about.html", "About — Dynamic Horse Solutions", "Jo Ann Lewis, Vanessa Helvey and Chase, the teachers of Equine Biomechanics.", ABOUT),
     ("contact.html", "Contact — Dynamic Horse Solutions", "Reach Jo Ann Lewis about classes, dates and the online series.", CONTACT),
+    *[(f'{x["slug"]}.html', f'{x["title"]} — Dynamic Horse Solutions', f'{x["blurb"].split(":")[0].split(",")[0]}. Coming soon; sign up to be told when it is out.', coming_page(x)) for x in COMING_DATA],
 ]
 for slug, title, desc, body in PAGES:
     io.open(slug, "w", encoding="utf-8").write(frame(slug, title, desc, body))

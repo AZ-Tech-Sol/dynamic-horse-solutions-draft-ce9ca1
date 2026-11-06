@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>The Book — Dynamic Horse Solutions</title>
+<meta name="description" content="Everything the series teaches. Coming soon; sign up to be told when it is out.">
+<link rel="icon" href="assets/favicon-512.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon-512.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dynamic Horse Solutions">
+<meta property="og:title" content="The Book — Dynamic Horse Solutions">
+<meta property="og:description" content="Everything the series teaches. Coming soon; sign up to be told when it is out.">
+<meta property="og:url" content="https://dynamichorsesolutions.com/book.html">
+<meta property="og:image" content="https://dynamichorsesolutions.com/assets/og/book.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Book — Dynamic Horse Solutions">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://dynamichorsesolutions.com/assets/og/book.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="index.html" aria-label="Dynamic Horse Solutions, home"><img class="wordmark lockup" src="assets/lockup.svg" alt="Dynamic Horse Solutions" width="2723" height="400"></a>
+  <nav class="wide" aria-label="Menu"><a href="index.html">Home</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="classes.html" class="cta">Classes</a></nav>
+  <details class="narrow"><summary aria-label="Menu"><span></span><span></span><span></span></summary>
+    <nav aria-label="Menu"><a href="classes.html" class="cta">Classes</a><a href="index.html">Home</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav></details>
+</header>
+<main>
+<section class="class-hero" style="background-image:linear-gradient(180deg,rgba(22,38,43,.35),rgba(22,38,43,.85)),url(assets/class-2-thoracic-sling.webp)">
+  <div class="ch-copy">
+    <p class="num">Coming soon · Read</p>
+    <h1>The Book</h1>
+    <p class="parts">Equine Biomechanics, from the skeleton out</p>
+  </div>
+</section>
+<section class="class-detail">
+  <p class="badge open big">Coming soon</p>
+  <p class="lede">Everything the series teaches, in one place: the hind end, the thoracic sling, the poll and jaw, and how they work together, with drawings from the classes and room for your own notes.</p>
+</section>
+<section class="form-wrap" id="notify">
+  <h2>Be the first to know</h2>
+  <p>Leave your email and we'll let you know when the book is ready. One email when it's ready, nothing else.</p>
+  <form id="notify-form" class="reg" novalidate>
+    <input type="hidden" name="interest" value="book">
+    <div class="two">
+      <label>Name <input name="name" autocomplete="name"></label>
+      <label>Email <input name="email" type="email" autocomplete="email" required></label>
+    </div>
+    <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-5000px">
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAAF2xBfE9am2PxE1r" data-action="notify" data-theme="light"></div>
+    <button class="btn" type="submit">Notify me</button>
+    <p id="msg" class="msg" role="status" aria-live="polite"></p>
+  </form>
+</section>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script>
+(function(){
+  var f=document.getElementById("notify-form"), msg=document.getElementById("msg");
+  f.addEventListener("submit",function(e){
+    e.preventDefault();
+    if(!f.checkValidity()){ f.reportValidity(); return; }
+    var d=Object.fromEntries(new FormData(f).entries()); d.turnstile_token=d["cf-turnstile-response"]||""; delete d["cf-turnstile-response"];
+    if(!d.turnstile_token){ msg.textContent="One moment: the security check is still loading. Please try again in a few seconds."; return; }
+    d.submitted_at=new Date().toISOString(); d.page=location.href;
+    var btn=f.querySelector("button"); btn.disabled=true; msg.textContent="Sending…";
+    fetch("https://n8n.aztechsol.com/webhook/dhs-notify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})
+      .then(function(r){ return r.json().catch(function(){return {}}).then(function(j){ return {r:r,j:j}; }); })
+      .then(function(x){ var r=x.r, j=x.j;
+        if(r.status===400 && j && j.error){ msg.textContent=j.error; if(window.turnstile) turnstile.reset(); return; }
+        if(!r.ok || !j.ok) throw new Error(r.status);
+        f.reset(); if(window.turnstile) turnstile.reset(); msg.innerHTML="<b>Thank you, you're on the list.</b> We'll email you when it's ready.";
+      })
+      .catch(function(){ msg.innerHTML="That didn't go through. Please try again, or email <a href=\"mailto:az.horsesensetraining@gmail.com\">az.horsesensetraining@gmail.com</a> and we'll add you."; if(window.turnstile) turnstile.reset(); })
+      .finally(function(){ btn.disabled=false; });
+  });
+})();
+</script>
+
+</main>
+<footer>
+  <img src="assets/logo.svg" alt="Dynamic Horse Solutions" width="140" height="140">
+  <p><a href="classes.html">Classes</a> · <a href="contact.html">Contact</a></p>
+  <p class="soon">Coming soon: <a href="podcast.html">Podcast</a> · <a href="book.html">Book</a> · <a href="videos.html">Video series</a></p>
+  <p>© 2026 Dynamic Horse Solutions · Tucson, Arizona</p>
+  <p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:NewForestPonies_sunrise.jpg">Joana Kruse</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, via Wikimedia Commons.</p>
+</footer>
+</body>
+</html>
