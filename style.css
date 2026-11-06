@@ -233,3 +233,7 @@ footer img{margin:0 auto .5rem}
 .msg .btn{margin-top:.6rem}
 
 .cf-turnstile{min-height:65px}
+
+/* 14:23, they picked A: the mark beside the logo's own lettering, as one lockup */
+.brand img.wordmark.lockup{height:36px;max-width:70vw}
+@media (min-width:600px){.brand img.wordmark.lockup{height:40px}}
