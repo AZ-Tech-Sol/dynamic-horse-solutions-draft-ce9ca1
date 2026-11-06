@@ -2,7 +2,7 @@
 """Builds the Dynamic Horse Solutions pages from one frame, so the menu and footer never drift. Run: python3 build.py"""
 import io
 
-RELEASE = "https://link.aztechsol.com/bewell-release"
+RELEASE = "release.html"   # the Dynamic Horse-branded release on this site (Angel 14:14); the short link still serves the old staging page
 WEBHOOK = "https://n8n.aztechsol.com/webhook/dhs-registration"
 JO_EMAIL = "az.horsesensetraining@gmail.com"
 NAV = [("index.html", "Home"), ("classes.html", "Classes"), ("about.html", "About"), ("contact.html", "Contact")]
