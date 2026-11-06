@@ -152,7 +152,8 @@ footer img{margin:0 auto .5rem}
 .msg{margin:0;color:var(--teal);min-height:1.5em}
 
 /* 12:35, Angel: no photo treatment — every picture gets the same rounded corners */
-.gait,.part-body img,.chase img,.chase-oval,.duo{border-radius:var(--radius)}
+.part-body img,.chase img,.chase-oval,.duo{border-radius:var(--radius)}
+.gait{border-radius:0}  /* 12:52: the strip is cut out of the flyer's paper and sits on the page */
 .part-one,.later,.extra,.card{border-radius:var(--radius)}
 .part-one{background:#fff;overflow:hidden}
 .later,.extra,.card{background:#fff;border:1px solid var(--line)}
