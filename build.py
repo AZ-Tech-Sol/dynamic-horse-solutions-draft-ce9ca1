@@ -29,7 +29,7 @@ def frame(slug, title, desc, body):
 </head>
 <body>
 <header class="top">
-  <a class="brand" href="index.html" aria-label="Dynamic Horse Solutions, home"><img src="assets/mark.svg" alt="" width="48" height="48"></a>
+  <a class="brand" href="index.html" aria-label="Dynamic Horse Solutions, home"><img class="wordmark" src="assets/wordmark.svg" alt="Dynamic Horse Solutions" width="1720" height="170"></a>
   <nav class="wide" aria-label="Menu">{links}<a class="release" href="{RELEASE}">Sign the media release</a></nav>
   <details class="narrow"><summary aria-label="Menu"><span></span><span></span><span></span></summary>
     <nav aria-label="Menu">{links}<a class="release" href="{RELEASE}">Sign the media release</a></nav></details>

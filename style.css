@@ -222,3 +222,8 @@ footer img{margin:0 auto .5rem}
 .hero-slider.single .hero-copy{top:0;bottom:auto;padding-top:2.5rem;padding-bottom:0}
 @media (min-width:900px){.hero-slider.single .hero-copy{padding-top:4rem}}
 @media (min-width:900px){.hero-slider.single .slides img{object-position:40% 40% !important}}
+
+/* 13:44, Angel: the wordmark in the menu bar instead of the mark */
+.top{min-height:64px}
+.brand img.wordmark{width:auto;height:20px;max-width:62vw}
+@media (min-width:600px){.brand img.wordmark{height:24px}}
