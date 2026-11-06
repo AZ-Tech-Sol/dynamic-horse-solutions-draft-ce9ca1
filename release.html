@@ -62,10 +62,9 @@ canvas { display:block; width: 100%; height: 180px; border-radius: 8px; }
 
   <form id="f" novalidate>
     <section class="card release">
-      <p>This clinic will be filmed so Vanessa Helvey and Jo Ann Lewis can offer it as an online course. By signing, I agree that they may record me, my voice and any horse I bring, and use the recording in that course and in clips that promote it. I won't be paid for it, and I can't take the recording back once it's published.</p>
+      <p>This clinic will be filmed so Vanessa Helvey and Jo Ann Lewis can offer it as an online course. By signing, I agree that they may record me and my voice, and use the recording in that course and in clips that promote it. I won't be paid for it, and I can't take the recording back once it's published.</p>
       <p>I won't take my own photos or video during the clinic.</p>
       <p>If I'd rather not appear, I'll say so below or tell Vanessa or Jo Ann before we start, and I'll be kept out of frame and edited out where I can't be.</p>
-      <p>If my horse belongs to someone else, I have the owner's permission to have it filmed.</p>
     </section>
 
     <section class="card">
@@ -75,14 +74,11 @@ canvas { display:block; width: 100%; height: 180px; border-radius: 8px; }
       <input id="email" name="email" type="email" autocomplete="email" required>
       <label for="phone">Phone <span class="opt">(optional)</span></label>
       <input id="phone" name="phone" type="tel" autocomplete="tel">
-      <label for="horse">Your horse's name <span class="opt">(if you're bringing one)</span></label>
-      <input id="horse" name="horse" type="text">
 
       <label>On camera?</label>
       <label class="choice"><input type="radio" name="on_camera" value="yes" checked><span>Yes, you may film me</span></label>
       <label class="choice"><input type="radio" name="on_camera" value="no"><span>Please keep me out of frame</span></label>
 
-      <label class="choice"><input type="checkbox" id="horse_not_mine" name="horse_not_mine"><span>The horse I'm bringing isn't mine, and I have the owner's permission</span></label>
       <label class="choice"><input type="checkbox" id="minor" name="minor"><span>I'm signing as the parent or guardian of a rider under 18</span></label>
       <div id="guardianBox" class="hidden">
         <label for="guardian_name">The rider's name</label>
@@ -158,9 +154,9 @@ canvas { display:block; width: 100%; height: 180px; border-radius: 8px; }
     var err = document.getElementById("err"); err.textContent = "";
     var v = function (id) { return document.getElementById(id).value.trim(); };
     var data = {
-      full_name: v("full_name"), email: v("email"), phone: v("phone"), horse: v("horse"),
+      full_name: v("full_name"), email: v("email"), phone: v("phone"), horse: "",
       on_camera: document.querySelector("input[name=on_camera]:checked").value,
-      horse_not_mine: document.getElementById("horse_not_mine").checked,
+      horse_not_mine: false,
       minor: document.getElementById("minor").checked, guardian_name: v("guardian_name"),
       agreed: document.getElementById("agreed").checked, release_version: RELEASE_VERSION
     };
@@ -182,7 +178,7 @@ canvas { display:block; width: 100%; height: 180px; border-radius: 8px; }
           "<p><strong>Consent to be filmed</strong><br>Equine Biomechanics, Part I · November 7, 2026</p>" +
           Array.prototype.map.call(document.querySelectorAll(".release p"), function (p) { return "<p>" + p.innerHTML + "</p>"; }).join("") +
           "<p><strong>Name:</strong> " + esc(data.full_name) + (data.minor ? " (parent or guardian of " + esc(data.guardian_name) + ")" : "") +
-          "<br><strong>Horse:</strong> " + esc(data.horse || "none") + (data.horse_not_mine ? " (owner's permission given)" : "") +
+
           "<br><strong>On camera:</strong> " + (data.on_camera === "yes" ? "yes" : "no, keep me out of frame") +
           "<br><strong>Signed:</strong> " + esc(j.signed_at_local || new Date().toLocaleString()) + "</p>" +
           "<img class='s' src='" + data.signature_png + "' alt='your signature'>" +

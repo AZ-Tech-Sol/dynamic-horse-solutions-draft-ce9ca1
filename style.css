@@ -237,3 +237,10 @@ footer img{margin:0 auto .5rem}
 /* 14:23, they picked A: the mark beside the logo's own lettering, as one lockup */
 .brand img.wordmark.lockup{height:36px;max-width:70vw}
 @media (min-width:600px){.brand img.wordmark.lockup{height:40px}}
+
+/* 14:34–14:35, Angel: the card pictures line up into one skeleton on wide screens; Classes is the header's call to action */
+@media (min-width:760px){.class-grid{gap:.6rem}.class-card img{aspect-ratio:4/5}}
+.top nav a.cta{background:var(--btn);color:#fff;padding:.45rem .8rem;border-radius:var(--btn-radius);border-bottom:0}
+.top nav a.cta:hover{background:var(--btn-hover)}
+.top nav a.cta[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--green)}
+.top details.narrow nav a.cta{margin-top:.25rem;text-align:center}

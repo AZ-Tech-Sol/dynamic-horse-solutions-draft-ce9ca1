@@ -9,7 +9,7 @@ NAV = [("index.html", "Home"), ("classes.html", "Classes"), ("about.html", "Abou
 CLASS_PAGES = ("part-1.html", "part-2.html", "part-3.html")   # the Classes item stays current on these
 
 def frame(slug, title, desc, body):
-    links = "".join(f'<a href="{h}"{" aria-current=\"page\"" if h == slug or (h == "classes.html" and slug in CLASS_PAGES) else ""}>{t}</a>' for h, t in NAV)
+    links = "".join(f'<a href="{h}"{" class=\"cta\"" if h == "classes.html" else ""}{" aria-current=\"page\"" if h == slug or (h == "classes.html" and slug in CLASS_PAGES) else ""}>{t}</a>' for h, t in NAV)
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -30,16 +30,16 @@ def frame(slug, title, desc, body):
 <body>
 <header class="top">
   <a class="brand" href="index.html" aria-label="Dynamic Horse Solutions, home"><img class="wordmark lockup" src="assets/lockup.svg" alt="Dynamic Horse Solutions" width="2723" height="400"></a>
-  <nav class="wide" aria-label="Menu">{links}<a class="release" href="{RELEASE}">Sign the media release</a></nav>
+  <nav class="wide" aria-label="Menu">{links}</nav>
   <details class="narrow"><summary aria-label="Menu"><span></span><span></span><span></span></summary>
-    <nav aria-label="Menu">{links}<a class="release" href="{RELEASE}">Sign the media release</a></nav></details>
+    <nav aria-label="Menu">{links}</nav></details>
 </header>
 <main>
 {body}
 </main>
 <footer>
   <img src="assets/logo.svg" alt="Dynamic Horse Solutions" width="140" height="140">
-  <p><a href="classes.html">Classes</a> · <a href="{RELEASE}">Media release</a> · <a href="contact.html">Contact</a></p>
+  <p><a href="classes.html">Classes</a> · <a href="contact.html">Contact</a></p>
   <p>© 2026 Dynamic Horse Solutions · Tucson, Arizona</p>
   <p class="credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:NewForestPonies_sunrise.jpg">Joana Kruse</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>, via Wikimedia Commons.</p>
 </footer>
@@ -67,7 +67,7 @@ INCL = "Lecture · demonstration · guided skeleton exploration · workbook incl
 def class_card(c):
     badge = '<span class="badge full">Fully booked</span>' if c["status"] == "booked" else f'<span class="badge open">Registration open · ${PRICE_DEPOSIT} deposit</span>'
     return f'''<a class="class-card" href="{c["slug"]}.html">
-  <img src="assets/{c["img"]}.webp" alt="" width="1200" height="900" loading="lazy">
+  <picture><source media="(min-width:760px)" srcset="assets/{c["img"].split("-")[0]}-{c["img"].split("-")[1]}-card.webp"><img src="assets/{c["img"]}.webp" alt="" width="1200" height="900" loading="lazy"></picture>
   <div class="cc-body">
     <p class="num">{c["num"]}</p>
     <h3>{c["title"]}</h3>
@@ -97,7 +97,6 @@ def reg_form(c):
     </div>
     <div class="two">
       <label>People attending <input name="people" type="number" min="1" max="20" value="1" required></label>
-      <label>Horses you'll be thinking of <span class="opt">(optional)</span> <input name="horses" type="number" min="0" max="20" value="1"></label>
     </div>
     <fieldset>
       <legend>How you'll pay the deposit</legend>
@@ -115,7 +114,7 @@ def reg_form(c):
 (function(){{
   var f=document.getElementById("reg"), msg=document.getElementById("msg");
   function mailto(d){{
-    var body="Registration\\n\\nClass: "+d.class_label+"\\nName: "+d.full_name+"\\nEmail: "+d.email+"\\nPhone: "+d.phone+"\\nPeople: "+d.people+"\\nHorses: "+(d.horses||"")+"\\nDeposit by: "+d.payment+"\\nNotes: "+(d.notes||"");
+    var body="Registration\\n\\nClass: "+d.class_label+"\\nName: "+d.full_name+"\\nEmail: "+d.email+"\\nPhone: "+d.phone+"\\nPeople: "+d.people+"\\nDeposit by: "+d.payment+"\\nNotes: "+(d.notes||"");
     return "mailto:{JO_EMAIL}?subject="+encodeURIComponent("Registration: {c["num"]} · "+d.full_name)+"&body="+encodeURIComponent(body);
   }}
   f.addEventListener("submit",function(e){{
@@ -193,7 +192,7 @@ HOME = f"""
     <p class="eyebrow">A three-part educational series for horse owners &amp; riders</p>
     <h1>Equine Biomechanics</h1>
     <p class="triad"><span>Structure</span><i>•</i><span>Posture</span><i>•</i><span>Function</span></p>
-    <p class="hero-actions"><a class="btn" href="classes.html">See the classes</a><a class="btn light" href="{RELEASE}">Sign the media release</a></p>
+    <p class="hero-actions"><a class="btn" href="classes.html">See the classes</a><a class="btn light" href="about.html">Meet the teachers</a></p>
   </div>
 </section>
 
