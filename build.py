@@ -9,7 +9,10 @@ NAV = [("index.html", "Home"), ("classes.html", "Classes"), ("about.html", "Abou
 CLASS_PAGES = ("part-1.html", "part-2.html", "part-3.html")   # the Classes item stays current on these
 
 def frame(slug, title, desc, body):
-    links = "".join(f'<a href="{h}"{" class=\"cta\"" if h == "classes.html" else ""}{" aria-current=\"page\"" if h == slug or (h == "classes.html" and slug in CLASS_PAGES) else ""}>{t}</a>' for h, t in NAV)
+    link = lambda h, t: f'<a href="{h}"{" class=\"cta\"" if h == "classes.html" else ""}{" aria-current=\"page\"" if h == slug or (h == "classes.html" and slug in CLASS_PAGES) else ""}>{t}</a>'
+    cta = [x for x in NAV if x[0] == "classes.html"]; rest = [x for x in NAV if x[0] != "classes.html"]
+    wide = "".join(link(*x) for x in rest + cta)     # Angel 14:50: Classes far right on desktop
+    narrow = "".join(link(*x) for x in cta + rest)   # and first in the phone menu
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -30,9 +33,9 @@ def frame(slug, title, desc, body):
 <body>
 <header class="top">
   <a class="brand" href="index.html" aria-label="Dynamic Horse Solutions, home"><img class="wordmark lockup" src="assets/lockup.svg" alt="Dynamic Horse Solutions" width="2723" height="400"></a>
-  <nav class="wide" aria-label="Menu">{links}</nav>
+  <nav class="wide" aria-label="Menu">{wide}</nav>
   <details class="narrow"><summary aria-label="Menu"><span></span><span></span><span></span></summary>
-    <nav aria-label="Menu">{links}</nav></details>
+    <nav aria-label="Menu">{narrow}</nav></details>
 </header>
 <main>
 {body}
