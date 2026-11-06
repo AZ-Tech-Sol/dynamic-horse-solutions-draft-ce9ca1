@@ -52,7 +52,7 @@ CLASSES_DATA = [
          img="class-1-hind-end", when="Saturday, November 7, 2026", time="9 AM – 1 PM", status="booked",
          blurb="The bones of the pelvis, sacrum and lumbar spine, the sacroiliac and lumbosacral joints, the hip, and the medial gluteal muscle that drives impulsion and lifts the back."),
     dict(slug="part-2", num="Part II", title="The Thoracic Sling", parts="Chest • Shoulder • Forelimb",
-         img="class-2-thoracic-sling", when="February 2027", time="date to be announced", status="open",
+         img="class-2-thoracic-sling", when="Saturday, February 27, 2027", time="time to be announced", status="open",
          blurb="The thoracic sling: the muscles that carry the horse's chest between its front legs, and how they lift the front end into a weight bearing posture."),
     dict(slug="part-3", num="Part III", title="Poll &amp; TMJ", parts="Poll • Jaw • Upper Neck",
          img="class-3-poll-tmj", when="April 2027", time="date to be announced", status="open",
@@ -82,7 +82,7 @@ def reg_form(c):
 <section class="form-wrap" id="register">
   <h2>Register for {c["num"]}</h2>
   <div class="deposit">
-    <p><b>${PRICE_TOTAL}</b> for the class. A <b>${PRICE_DEPOSIT} deposit</b> (50%) holds your place now; the balance is due once the date is set.</p>
+    <p><b>${PRICE_TOTAL}</b> for the class. A <b>${PRICE_DEPOSIT} deposit</b> (50%) holds your place now; the balance is due before the class.</p>
     <p class="small">Jo Ann confirms your place and sends deposit details by email or text. Deposits are paid by Zelle or PayPal.</p>
   </div>
   <form id="reg" class="reg" novalidate>
@@ -120,7 +120,8 @@ def reg_form(c):
     var d=Object.fromEntries(new FormData(f).entries()); d.deposit={PRICE_DEPOSIT}; d.total={PRICE_TOTAL}; d.submitted_at=new Date().toISOString(); d.page=location.href;
     var btn=f.querySelector("button"); btn.disabled=true; msg.textContent="Sending…";
     fetch("{WEBHOOK}",{{method:"POST",headers:{{"Content-Type":"application/json"}},body:JSON.stringify(d)}})
-      .then(function(r){{ if(!r.ok) throw new Error(r.status); f.reset(); msg.innerHTML="Thank you, your place is held. Jo Ann will confirm and send deposit details."; }})
+      .then(function(r){{ if(!r.ok) throw new Error(r.status); f.reset(); var t="Hi Jo Ann, this is "+d.full_name+". I just registered for "+d.class_label+" ("+d.people+" attending) and will send my $"+d.deposit+" deposit by "+d.payment+". My email is "+d.email+".";
+        msg.innerHTML="<b>Thank you, your place is held.</b> Send your $"+d.deposit+" deposit to Jo Ann by Zelle or PayPal, then let her know it's on its way:<br><a class=\\"btn\\" href=\\"sms:+15204038200?&body="+encodeURIComponent(t)+"\\">Text Jo Ann</a>"; }})
       .catch(function(){{ msg.innerHTML="Your email app is opening with your registration filled in. Press send and it goes to Jo Ann. If nothing opens, email <a href=\\""+mailto(d)+"\\">{JO_EMAIL}</a> or call 520-403-8200."; location.href=mailto(d); }})
       .finally(function(){{ btn.disabled=false; }});
   }});
@@ -147,6 +148,7 @@ def class_page(c):
   <p class="badge full big">Fully booked</p>
   <p class="lede">{c["blurb"]}</p>
   {facts}
+  <p class="price">$110 <span>introductory price · half the ${PRICE_TOTAL} rate of the classes that follow</span></p>
   <div class="extras">
     <article class="extra">
       <h3>The Media Release</h3>

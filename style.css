@@ -227,3 +227,7 @@ footer img{margin:0 auto .5rem}
 .top{min-height:64px}
 .brand img.wordmark{width:auto;height:20px;max-width:62vw}
 @media (min-width:600px){.brand img.wordmark{height:24px}}
+
+/* 13:47, Angel: the class page's description lines up with the badge and the facts */
+.class-detail .lede{margin-left:0;margin-right:0}
+.msg .btn{margin-top:.6rem}

@@ -34,7 +34,7 @@
   <p class="badge open big">Registration open</p>
   <p class="lede">The thoracic sling: the muscles that carry the horse's chest between its front legs, and how they lift the front end into a weight bearing posture.</p>
   <div class="facts">
-    <p class="when">February 2027<br><span>date to be announced</span></p>
+    <p class="when">Saturday, February 27, 2027<br><span>time to be announced</span></p>
     <p class="where">Copper Horse Ranch · 9887 N Camino de Oeste · Tucson, AZ</p>
     <p class="incl">Lecture · demonstration · guided skeleton exploration · workbook included</p>
   </div>
@@ -45,12 +45,12 @@
 <section class="form-wrap" id="register">
   <h2>Register for Part II</h2>
   <div class="deposit">
-    <p><b>$220</b> for the class. A <b>$110 deposit</b> (50%) holds your place now; the balance is due once the date is set.</p>
+    <p><b>$220</b> for the class. A <b>$110 deposit</b> (50%) holds your place now; the balance is due before the class.</p>
     <p class="small">Jo Ann confirms your place and sends deposit details by email or text. Deposits are paid by Zelle or PayPal.</p>
   </div>
   <form id="reg" class="reg" novalidate>
     <input type="hidden" name="class" value="part-2">
-    <input type="hidden" name="class_label" value="Part II · The Thoracic Sling · February 2027 · $220, $110 deposit">
+    <input type="hidden" name="class_label" value="Part II · The Thoracic Sling · Saturday, February 27, 2027 · $220, $110 deposit">
     <label>Full name <input name="full_name" autocomplete="name" required></label>
     <div class="two">
       <label>Email <input name="email" type="email" autocomplete="email" required></label>
@@ -83,7 +83,8 @@
     var d=Object.fromEntries(new FormData(f).entries()); d.deposit=110; d.total=220; d.submitted_at=new Date().toISOString(); d.page=location.href;
     var btn=f.querySelector("button"); btn.disabled=true; msg.textContent="Sending…";
     fetch("https://n8n.aztechsol.com/webhook/dhs-registration",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})
-      .then(function(r){ if(!r.ok) throw new Error(r.status); f.reset(); msg.innerHTML="Thank you, your place is held. Jo Ann will confirm and send deposit details."; })
+      .then(function(r){ if(!r.ok) throw new Error(r.status); f.reset(); var t="Hi Jo Ann, this is "+d.full_name+". I just registered for "+d.class_label+" ("+d.people+" attending) and will send my $"+d.deposit+" deposit by "+d.payment+". My email is "+d.email+".";
+        msg.innerHTML="<b>Thank you, your place is held.</b> Send your $"+d.deposit+" deposit to Jo Ann by Zelle or PayPal, then let her know it's on its way:<br><a class=\"btn\" href=\"sms:+15204038200?&body="+encodeURIComponent(t)+"\">Text Jo Ann</a>"; })
       .catch(function(){ msg.innerHTML="Your email app is opening with your registration filled in. Press send and it goes to Jo Ann. If nothing opens, email <a href=\""+mailto(d)+"\">az.horsesensetraining@gmail.com</a> or call 520-403-8200."; location.href=mailto(d); })
       .finally(function(){ btn.disabled=false; });
   });
