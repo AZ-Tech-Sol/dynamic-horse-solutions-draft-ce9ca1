@@ -201,7 +201,7 @@ def class_page(c):
 # Placeholder pages with a "tell me when it's out" form (Angel, 2026-11-06 16:30). The words are Lena's until Vanessa and Jo Ann send theirs.
 NOTIFY = "https://n8n.aztechsol.com/webhook/dhs-notify"
 COMING_DATA = [
-    dict(slug="podcast", label="The Podcast", img="teachers-og.jpg", pos="center 22%", eyebrow="Coming soon · Listen",
+    dict(slug="podcast", label="The Podcast", img="teachers.jpg", pos="center 30%", cls="duo-hero", eyebrow="Coming soon · Listen",
          title="The Dynamic Horse Podcast", sub="Conversations on structure, posture and function",
          blurb="Jo Ann and Vanessa talk through how a horse is built and how it moves: what they see in the clinic, the questions riders bring them, and the small changes that make a big difference to a horse's comfort and way of going.",
          ask="Leave your email and we'll let you know when the first episode is out."),
@@ -216,7 +216,7 @@ COMING_DATA = [
 ]
 
 def coming_page(x):
-    return f'''<section class="class-hero" style="background-image:linear-gradient(180deg,rgba(22,38,43,.35),rgba(22,38,43,.85)),url(assets/{x["img"]});background-position:{x.get("pos", "center")}">
+    return f'''<section class="class-hero {x.get('cls', '')}" style="background-image:linear-gradient(180deg,rgba(22,38,43,.35),rgba(22,38,43,.85)),url(assets/{x["img"]});background-position:{x.get("pos", "center")}">
   <div class="ch-copy">
     <p class="num">{x["eyebrow"]}</p>
     <h1>{x["title"]}</h1>
