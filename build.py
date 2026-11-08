@@ -337,7 +337,7 @@ ABOUT = """
 
 <section id="teachers" class="teachers">
   <h2>The Teachers</h2>
-  <img class="duo" src="assets/teachers.jpg" alt="Jo Ann Lewis and Vanessa Helvey" width="732" height="376">
+  <img class="duo" src="assets/teachers.jpg" alt="Vanessa Helvey and Jo Ann Lewis in the arena at Copper Horse Ranch" width="732" height="376">
   <div class="pair">
     <article>
       <h3>Jo Ann Lewis, BSc</h3>
