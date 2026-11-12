@@ -64,7 +64,7 @@ def frame(slug, title, desc, body):
 
 CLASSES_DATA = [
     dict(slug="part-1", num="Part I", title="The Hind End Junction", parts="Pelvis • Sacrum • Lumbar Spine",
-         img="class-1-hind-end", when="Saturday, November 7, 2026", time="9 AM – 1 PM", status="booked",
+         img="class-1-hind-end", when="Filmed November 7, 2026 · coming online", time="held Saturday, 9 AM – 1 PM", status="filmed",
          blurb="The bones of the pelvis, sacrum and lumbar spine, the sacroiliac and lumbosacral joints, the hip, and the medial gluteal muscle that drives impulsion and lifts the back."),
     dict(slug="part-2", num="Part II", title="The Thoracic Sling", parts="Chest • Shoulder • Forelimb",
          img="class-2-thoracic-sling", when="Saturday, February 27, 2027", time="time to be announced", status="open",
@@ -80,7 +80,7 @@ WHERE = "Copper Horse Ranch · 9887 N Camino de Oeste · Tucson, AZ"
 INCL = "Lecture · demonstration · guided skeleton exploration · workbook included"
 
 def class_card(c):
-    badge = '<span class="badge full">Fully booked</span>' if c["status"] == "booked" else f'<span class="badge open">Registration open · ${PRICE_DEPOSIT} deposit</span>'
+    badge = '<span class="badge full">Filmed · coming online</span>' if c["status"] == "filmed" else '<span class="badge full">Fully booked</span>' if c["status"] == "booked" else f'<span class="badge open">Registration open · ${PRICE_DEPOSIT} deposit</span>'
     return f'''<a class="class-card" href="{c["slug"]}.html">
   <picture><source media="(min-width:760px)" srcset="assets/{c["img"].split("-")[0]}-{c["img"].split("-")[1]}-card.webp"><img src="assets/{c["img"]}.webp" alt="" width="1200" height="900" loading="lazy"></picture>
   <div class="cc-body">
@@ -165,17 +165,18 @@ def class_page(c):
     <p class="where">{WHERE}</p>
     <p class="incl">{INCL}</p>
   </div>'''
-    if c["status"] == "booked":
+    if c["status"] in ("booked", "filmed"):
+        filmed = c["status"] == "filmed"
         body = f'''
 <section class="class-detail">
-  <p class="badge full big">Fully booked</p>
+  <p class="badge full big">{"Filmed · coming online" if filmed else "Fully booked"}</p>
   <p class="lede">{c["blurb"]}</p>
   {facts}
-  <p class="price">$110 <span>introductory price · half the ${PRICE_TOTAL} rate of the classes that follow</span></p>
+  {"" if filmed else f'<p class="price">$110 <span>introductory price · half the ${PRICE_TOTAL} rate of the classes that follow</span></p>'}
   <div class="extras">
     <article class="extra">
       <h3>The Media Release</h3>
-      <p>This class is being filmed for the online series. If you're attending, please sign the consent to be filmed before you arrive. It takes a minute on your phone.</p>
+      <p>{"This class was filmed for the online series. If you were there and haven't signed the consent to be filmed yet, please sign it now. It takes a minute on your phone." if filmed else "This class is being filmed for the online series. If you're attending, please sign the consent to be filmed before you arrive. It takes a minute on your phone."}</p>
       <p><a class="btn" href="{RELEASE}">Sign the media release</a></p>
     </article>
     <article class="extra">
@@ -382,7 +383,7 @@ CONTACT = f"""
 
 PAGES = [
     ("index.html", "Dynamic Horse Solutions — Equine Biomechanics", "Equine Biomechanics: Structure · Posture · Function. A three-part series for horse owners and riders in Tucson, taught by Jo Ann Lewis and Vanessa Helvey.", HOME),
-    ("classes.html", "Classes — Dynamic Horse Solutions", "Part I, The Hind End Junction, Saturday November 7, 2026 at Copper Horse Ranch, Tucson; then Parts II and III in 2027.", CLASSES),
+    ("classes.html", "Classes — Dynamic Horse Solutions", "Part I, The Hind End Junction, filmed November 7, 2026 at Copper Horse Ranch and coming online; Parts II and III in 2027.", CLASSES),
     *[(f'{c["slug"]}.html', f'{c["num"]}: {c["title"].replace("&amp;", "&")} — Dynamic Horse Solutions', f'{c["num"]} of Equine Biomechanics, {c["title"].replace("&amp;", "&")}, at Copper Horse Ranch in Tucson.', class_page(c)) for c in CLASSES_DATA],
     ("register.html", "Register — Dynamic Horse Solutions", "Register for an Equine Biomechanics class with Jo Ann Lewis and Vanessa Helvey.", REGISTER),
     ("about.html", "About — Dynamic Horse Solutions", "Jo Ann Lewis, Vanessa Helvey and Chase, the teachers of Equine Biomechanics.", ABOUT),
